@@ -114,6 +114,13 @@
   (connected (db-spec-for model-name)
     (sql/delete-rows (table-name model-name) (to-conditions attributes))))
 
+(defn row-count
+  "Returns how many records are in the table."
+  [model-name]
+  (connected (db-spec-for model-name)
+    (sql/with-query-results rows [(str "select count(id) from " (table-name model-name))]
+      (val (first (first rows))))))
+
 (defn- defs-from-option-groups [model-name option-groups]
   (reduce
     (fn [def-forms [option-group-name & options]]
@@ -154,6 +161,7 @@
       (defn ~'model-metadata [& args#]
         (apply model-metadata-for ~model-name args#))
       (defn ~'table-name [] (table-name ~model-name))
+      (defn ~'row-count [] (row-count ~model-name))
       (defn ~'get-record [id#]
         (get-record ~model-name id#))
       (defn ~'find-records [attributes#]

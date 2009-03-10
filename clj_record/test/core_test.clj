@@ -14,7 +14,10 @@
 (deftest table-name-is-available-on-each-model-namespace
   (are (= _1 _2)
     "manufacturers"  (manufacturer/table-name)
-    "productos"       (product/table-name)))
+    "productos"      (product/table-name)))
+
+(deftest table-rows-count
+  (is (= (product/row-count) 0)))
 
 (defdbtest insert-returns-id-of-new-record
   (let [id (manufacturer/insert (valid-manufacturer-with {:name "ACME"}))
